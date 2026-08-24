@@ -1,0 +1,8 @@
+torch>=2.0
+numpy>=1.23
+matplotlib>=3.6
+scikit-image>=0.20   # PSNR/SSIM metrics (evaluation)
+tqdm>=4.65
+# optional:
+# nibabel>=5.0        # only if loading NIfTI (.nii/.nii.gz) volumes
+# sigpy>=0.1.26       # optional, for the CS-MRI (TV) baseline

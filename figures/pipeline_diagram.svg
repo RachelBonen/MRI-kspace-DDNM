@@ -1,0 +1,100 @@
+<svg viewBox="0 0 860 660" xmlns="http://www.w3.org/2000/svg" font-family="Helvetica, Arial, sans-serif">
+<desc>Diffusion MRI reconstruction from subsampled k-space: simulate the accelerated scan, train a diffusion prior once, reconstruct by alternating denoising with k-space data consistency, then evaluate.</desc>
+<defs>
+<marker id="arw" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L7,3 L0,6 Z" fill="#666666"/>
+</marker>
+<marker id="arwA" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+<path d="M0,0 L7,3 L0,6 Z" fill="#c65d3b"/>
+</marker>
+</defs>
+<style>
+.box{fill:#f5f3ee;stroke:#c9c3b8;stroke-width:1.5;}
+.acc{fill:#faf1ec;stroke:#c65d3b;stroke-width:2;}
+.op{fill:#ffffff;stroke:#c9c3b8;stroke-width:1.5;stroke-dasharray:4 3;}
+.t{fill:#1a1a1a;font-size:13px;font-weight:600;}
+.ts{fill:#666666;font-size:11px;}
+.lab{fill:#666666;font-size:11px;font-style:italic;}
+.hd{fill:#1a1a1a;font-size:14px;font-weight:700;}
+.acct{fill:#c65d3b;font-size:13px;font-weight:700;}
+.ln{stroke:#666666;stroke-width:1.5;fill:none;}
+.lnA{stroke:#c65d3b;stroke-width:2;fill:none;}
+</style>
+
+<rect x="0" y="0" width="860" height="660" fill="#ffffff"/>
+
+<!-- STAGE 1 -->
+<text x="24" y="30" class="hd">1 · Simulate the accelerated scan  (forward model)</text>
+<rect class="box" x="24" y="46" width="120" height="52" rx="8"/>
+<text x="84" y="68" text-anchor="middle" class="t">Full image</text>
+<text x="84" y="84" text-anchor="middle" class="ts">x — fully sampled</text>
+<rect class="op" x="176" y="46" width="70" height="52" rx="8"/>
+<text x="211" y="76" text-anchor="middle" class="t">FFT</text>
+<rect class="box" x="278" y="46" width="130" height="52" rx="8"/>
+<text x="343" y="63" text-anchor="middle" class="t">Undersample</text>
+<text x="343" y="79" text-anchor="middle" class="ts">1D Gaussian mask</text>
+<text x="343" y="92" text-anchor="middle" class="ts">keep 20/30/50%</text>
+<rect class="op" x="440" y="46" width="86" height="52" rx="8"/>
+<text x="483" y="70" text-anchor="middle" class="t">Zero-fill</text>
+<text x="483" y="86" text-anchor="middle" class="ts">+ IFFT</text>
+<rect class="box" x="558" y="46" width="130" height="52" rx="8"/>
+<text x="623" y="63" text-anchor="middle" class="t">Aliased input</text>
+<text x="623" y="79" text-anchor="middle" class="ts">zero-filled x_zf</text>
+<text x="623" y="92" text-anchor="middle" class="ts">+ measured y, M</text>
+<line class="ln" x1="144" y1="72" x2="174" y2="72" marker-end="url(#arw)"/>
+<line class="ln" x1="246" y1="72" x2="276" y2="72" marker-end="url(#arw)"/>
+<line class="ln" x1="408" y1="72" x2="438" y2="72" marker-end="url(#arw)"/>
+<line class="ln" x1="526" y1="72" x2="556" y2="72" marker-end="url(#arw)"/>
+
+<!-- STAGE 2 -->
+<text x="24" y="152" class="hd">2 · Train the diffusion prior  (once, offline — no mask)</text>
+<rect class="box" x="24" y="168" width="132" height="52" rx="8"/>
+<text x="90" y="190" text-anchor="middle" class="t">Clean slices</text>
+<text x="90" y="206" text-anchor="middle" class="ts">fully-sampled x0</text>
+<rect class="op" x="188" y="168" width="96" height="52" rx="8"/>
+<text x="236" y="190" text-anchor="middle" class="t">Add noise</text>
+<text x="236" y="206" text-anchor="middle" class="ts">step t</text>
+<rect class="box" x="316" y="168" width="150" height="52" rx="8"/>
+<text x="391" y="190" text-anchor="middle" class="t">U-Net denoiser</text>
+<text x="391" y="206" text-anchor="middle" class="ts">predict noise e(xt,t)</text>
+<rect class="acc" x="498" y="168" width="160" height="52" rx="8"/>
+<text x="578" y="190" text-anchor="middle" class="acct">Diffusion prior</text>
+<text x="578" y="206" text-anchor="middle" class="ts">learns p(clean MRI)</text>
+<line class="ln" x1="156" y1="194" x2="186" y2="194" marker-end="url(#arw)"/>
+<line class="ln" x1="284" y1="194" x2="314" y2="194" marker-end="url(#arw)"/>
+<line class="ln" x1="466" y1="194" x2="496" y2="194" marker-end="url(#arw)"/>
+
+<!-- STAGE 3 -->
+<text x="24" y="274" class="acct" font-size="14">3 · Reconstruct = reverse diffusion + data consistency  (the key idea)</text>
+<rect class="box" x="24" y="300" width="110" height="56" rx="8"/>
+<text x="79" y="324" text-anchor="middle" class="t">Pure noise</text>
+<text x="79" y="340" text-anchor="middle" class="ts">x_T</text>
+<rect x="176" y="292" width="470" height="150" rx="12" fill="none" stroke="#c65d3b" stroke-width="1.5" stroke-dasharray="6 4"/>
+<text x="188" y="312" class="lab">repeat for t = T … 1</text>
+<rect class="box" x="200" y="330" width="180" height="70" rx="8"/>
+<text x="290" y="356" text-anchor="middle" class="t">A · Denoise one step</text>
+<text x="290" y="373" text-anchor="middle" class="ts">prior removes a little</text>
+<text x="290" y="387" text-anchor="middle" class="ts">noise, estimate x0</text>
+<rect class="acc" x="424" y="330" width="196" height="70" rx="8"/>
+<text x="522" y="352" text-anchor="middle" class="acct">B · Data consistency</text>
+<text x="522" y="369" text-anchor="middle" class="ts">overwrite sampled rows</text>
+<text x="522" y="383" text-anchor="middle" class="ts">with measured y  (DDNM)</text>
+<line class="lnA" x1="380" y1="365" x2="422" y2="365" marker-end="url(#arwA)"/>
+<path class="lnA" d="M424,395 C360,430 300,430 290,404" marker-end="url(#arwA)"/>
+<line class="ln" x1="134" y1="328" x2="198" y2="360" marker-end="url(#arw)"/>
+<rect class="acc" x="688" y="330" width="148" height="70" rx="8"/>
+<text x="762" y="360" text-anchor="middle" class="acct">Restored image</text>
+<text x="762" y="378" text-anchor="middle" class="ts">x0 approx original</text>
+<line class="lnA" x1="646" y1="365" x2="686" y2="365" marker-end="url(#arwA)"/>
+<path class="ln" d="M623,98 C690,140 690,250 545,328" marker-end="url(#arw)"/>
+<text x="700" y="210" class="lab">measured y, M</text>
+
+<!-- STAGE 4 -->
+<text x="24" y="486" class="hd">4 · Evaluate</text>
+<rect class="box" x="24" y="502" width="812" height="58" rx="8"/>
+<text x="40" y="527" class="t">Compare to baseline (zero-fill / CS-MRI) and to the article's GAN</text>
+<text x="40" y="546" class="ts">PSNR and SSIM per ratio (20/30/50%, real and imag) · line plots with std · sample-wise scatter + Pearson r · 4 qualitative examples</text>
+
+<text x="24" y="592" class="lab">The prior invents realistic anatomy; data consistency keeps it faithful to what the scanner actually measured.</text>
+<text x="24" y="612" class="lab">One trained prior serves all three acceleration ratios — only the mask changes at reconstruction time.</text>
+</svg>

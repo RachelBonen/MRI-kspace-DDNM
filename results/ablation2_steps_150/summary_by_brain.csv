@@ -1,0 +1,4 @@
+ratio,method,psnr_mean,psnr_std,ssim_mean,ssim_std,n
+0.30,Zero-fill,16.3990,3.1689,0.5339,0.0826,5
+0.30,CS-MRI (baseline),22.1524,6.9007,0.8048,0.1283,5
+0.30,DDNM (ours),26.6542,5.3371,0.8636,0.0709,5

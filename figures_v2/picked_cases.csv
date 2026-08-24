@@ -1,0 +1,17 @@
+figure,volume,band_pos,ratio,cs_psnr,ddnm_psnr
+multi_patient_r20,3668.npy,20,0.20,11.68,19.14
+multi_patient_r20,3816.npy,20,0.20,13.23,27.05
+multi_patient_r20,3851.npy,20,0.20,13.43,26.73
+multi_patient_r20,3952.npy,20,0.20,13.65,17.94
+multi_patient_r30,3668.npy,20,0.30,28.99,31.41
+multi_patient_r30,3816.npy,20,0.30,29.34,30.19
+multi_patient_r30,3851.npy,20,0.30,28.93,32.12
+multi_patient_r30,3952.npy,20,0.30,13.69,23.44
+multi_patient_r50,3668.npy,20,0.50,35.42,35.51
+multi_patient_r50,3816.npy,20,0.50,13.35,31.88
+multi_patient_r50,3851.npy,20,0.50,33.93,34.03
+multi_patient_r50,3952.npy,20,0.50,34.19,33.65
+qualitative_both_good,3405.npy,0,0.30,34.51,33.25
+qualitative_both_poor,3013.npy,0,0.30,12.74,11.07
+qualitative_baseline_wins,3013.npy,0,0.30,12.74,11.07
+qualitative_ours_wins,3600.npy,6,0.30,12.12,31.64
